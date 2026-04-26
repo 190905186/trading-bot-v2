@@ -96,6 +96,20 @@ Then open:
 Useful env vars:
 
 - `TB2_REDIS_URL` (all scripts)
-- `TB2_INSTRUMENTS` for tick script (comma separated tokens)
+- `TB2_MARKET_DATA_SOURCE` (`mock` or `zerodha`)
+- `TB2_INSTRUMENTS` for tick script (comma separated tokens; for Zerodha use instrument_token ints)
 - `TB2_BROKER_NAME` for tick/order script broker labeling
 - `TB2_CONSUMER_START_ID` (`$` for new messages only, `0-0` for replay)
+
+### Zerodha Tick Source
+
+To switch from mock ticks to Zerodha websocket in the same pipeline:
+
+- `TB2_MARKET_DATA_SOURCE=zerodha`
+- `TB2_ZERODHA_API_KEY=<your_api_key>`
+- `TB2_ZERODHA_ACCESS_TOKEN=<your_access_token>`
+- `TB2_INSTRUMENTS=256265,738561,2953217` (example instrument tokens)
+
+Then run:
+
+- `python scripts/run_ticks_service.py`

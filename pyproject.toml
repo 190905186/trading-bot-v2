@@ -13,6 +13,7 @@ dependencies = [
   "uvicorn",
   "redis",
   "psutil",
+  "kiteconnect",
 ]
 
 [tool.setuptools]
