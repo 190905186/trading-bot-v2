@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from trading_bot_v2.services.dashboard.service import DashboardService
 
@@ -10,6 +14,16 @@ from trading_bot_v2.services.dashboard.service import DashboardService
 def create_dashboard_app(dashboard_service: DashboardService) -> FastAPI:
     """Create dashboard API application."""
     app = FastAPI(title="Trading Bot V2 Dashboard API", version="0.1.0")
+    static_dir = Path(__file__).resolve().parent / "static"
+    app.mount("/assets", StaticFiles(directory=str(static_dir)), name="assets")
+
+    @app.get("/")
+    def home() -> FileResponse:
+        return FileResponse(static_dir / "dashboard.html")
+
+    @app.get("/dashboard")
+    def dashboard_page() -> FileResponse:
+        return FileResponse(static_dir / "dashboard.html")
 
     @app.get("/health")
     def health() -> dict:

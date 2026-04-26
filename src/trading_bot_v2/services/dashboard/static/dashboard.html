@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Trading Bot V2 Dashboard</title>
+    <link rel="stylesheet" href="/assets/dashboard.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>Trading Bot V2 Dashboard</h1>
+      <div class="topbar-right">
+        <label for="refreshSeconds">Refresh:</label>
+        <select id="refreshSeconds">
+          <option value="1">1s</option>
+          <option value="2" selected>2s</option>
+          <option value="5">5s</option>
+          <option value="10">10s</option>
+        </select>
+        <button id="refreshNow">Refresh now</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Filters</h2>
+        <div class="filters">
+          <div>
+            <label for="brokerFilter">Broker:</label>
+            <select id="brokerFilter">
+              <option value="">All</option>
+            </select>
+          </div>
+          <div>
+            <label for="tokenFilter">Token contains:</label>
+            <input id="tokenFilter" type="text" placeholder="e.g. RELIANCE" />
+          </div>
+        </div>
+      </section>
+
+      <section class="grid two-col">
+        <article class="card">
+          <h2>Service Health</h2>
+          <div id="servicesHealth" class="table-wrap"></div>
+        </article>
+        <article class="card">
+          <h2>Quick Summary</h2>
+          <div id="quickSummary" class="summary-grid"></div>
+        </article>
+      </section>
+
+      <section class="card">
+        <h2>Metrics Overview</h2>
+        <div id="metricsOverview" class="table-wrap"></div>
+      </section>
+
+      <section class="grid two-col">
+        <article class="card">
+          <h2>Signal / Order Match</h2>
+          <div id="matchPanel" class="summary-grid"></div>
+        </article>
+        <article class="card">
+          <h2>Buy / Sell Distribution</h2>
+          <div id="buySellPanel" class="table-wrap"></div>
+        </article>
+      </section>
+
+      <section class="card">
+        <h2>Metric Details</h2>
+        <label for="metricSelect">Metric:</label>
+        <select id="metricSelect"></select>
+        <pre id="metricDetail"></pre>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span id="lastUpdated">Last updated: never</span>
+      <span id="statusText">Status: idle</span>
+    </footer>
+
+    <script src="/assets/dashboard.js"></script>
+  </body>
+</html>

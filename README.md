@@ -82,11 +82,16 @@ Start Redis first, then run these scripts in separate terminals:
 5. Dashboard API:
    - `python scripts/run_dashboard_api.py`
 
+Or start everything together:
+
+- `python scripts/run_all_services.py`
+
 Then open:
 
-- `http://localhost:8080/dashboard/snapshot`
-- `http://localhost:8080/dashboard/metrics`
-- `http://localhost:8080/dashboard/services-health`
+- `http://127.0.0.1:8088/dashboard/snapshot`
+- `http://127.0.0.1:8088/dashboard/metrics`
+- `http://127.0.0.1:8088/dashboard/services-health`
+- `http://127.0.0.1:8088/dashboard`
 
 Useful env vars:
 
