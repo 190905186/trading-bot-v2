@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, List, Literal, Mapping
 
 Aggregation = Literal["sum", "avg", "min", "max", "count", "rate", "ratio", "p95"]
@@ -128,4 +128,4 @@ class MetricCatalog:
         return [metric for metric in self._metrics.values() if metric.enabled]
 
     def as_dict(self) -> Dict[str, Dict[str, Any]]:
-        return {mid: definition.__dict__ for mid, definition in self._metrics.items()}
+        return {mid: asdict(definition) for mid, definition in self._metrics.items()}

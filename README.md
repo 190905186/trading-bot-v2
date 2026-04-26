@@ -28,3 +28,41 @@ Process-first, modular trading architecture with explicit event contracts, inter
 - `src/trading_bot_v2/interfaces/risk.py`
 - `src/trading_bot_v2/services/dashboard/service.py`
 - `src/trading_bot_v2/monitoring/metric_catalog.py`
+
+## Phase 2 Added
+
+- Redis Streams publisher/consumer adapters:
+  - `src/trading_bot_v2/infrastructure/messaging/redis_streams.py`
+- Redis-backed dashboard metric provider:
+  - `src/trading_bot_v2/monitoring/redis_providers.py`
+- Process CPU/memory health provider:
+  - `src/trading_bot_v2/monitoring/system_providers.py`
+- Dashboard FastAPI app:
+  - `src/trading_bot_v2/services/dashboard/api.py`
+
+## Run Dashboard API
+
+Set environment variables (optional):
+
+- `TB2_REDIS_URL` (default: `redis://localhost:6379/0`)
+- `TB2_DASHBOARD_HOST` (default: `0.0.0.0`)
+- `TB2_DASHBOARD_PORT` (default: `8080`)
+
+Run:
+
+`python scripts/run_dashboard_api.py`
+
+API endpoints:
+
+- `GET /health`
+- `GET /dashboard/definitions`
+- `GET /dashboard/metrics`
+- `GET /dashboard/services-health`
+- `GET /dashboard/snapshot`
+
+## Publish Service Heartbeats
+
+Use this from each independent service process to publish CPU/memory + status:
+
+- `TB2_SERVICE_NAME=ticks-service python scripts/run_heartbeat_publisher.py`
+- `TB2_SERVICE_NAME=order-service python scripts/run_heartbeat_publisher.py`
