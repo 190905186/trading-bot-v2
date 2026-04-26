@@ -66,3 +66,31 @@ Use this from each independent service process to publish CPU/memory + status:
 
 - `TB2_SERVICE_NAME=ticks-service python scripts/run_heartbeat_publisher.py`
 - `TB2_SERVICE_NAME=order-service python scripts/run_heartbeat_publisher.py`
+
+## Run Full Local Pipeline
+
+Start Redis first, then run these scripts in separate terminals:
+
+1. Tick producer (mock broker ticks):
+   - `python scripts/run_ticks_service.py`
+2. Candle builder (from ticks):
+   - `python scripts/run_candle_service.py`
+3. Signal generator (from candles):
+   - `python scripts/run_signal_service.py`
+4. Order service (paper execution from signals):
+   - `python scripts/run_order_service.py`
+5. Dashboard API:
+   - `python scripts/run_dashboard_api.py`
+
+Then open:
+
+- `http://localhost:8080/dashboard/snapshot`
+- `http://localhost:8080/dashboard/metrics`
+- `http://localhost:8080/dashboard/services-health`
+
+Useful env vars:
+
+- `TB2_REDIS_URL` (all scripts)
+- `TB2_INSTRUMENTS` for tick script (comma separated tokens)
+- `TB2_BROKER_NAME` for tick/order script broker labeling
+- `TB2_CONSUMER_START_ID` (`$` for new messages only, `0-0` for replay)
