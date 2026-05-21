@@ -12,6 +12,10 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from trading_bot_v2.bootstrap.repo_dotenv import load_repo_dotenv  # noqa: E402
+
+load_repo_dotenv()
+
 from trading_bot_v2.infrastructure.execution import PaperExecutionAdapter
 from trading_bot_v2.infrastructure.messaging import RedisStreamConsumer, RedisStreamPublisher
 from trading_bot_v2.infrastructure.risk import BasicRiskManager
@@ -21,7 +25,7 @@ from trading_bot_v2.services.order.service import OrderService
 
 
 def main() -> None:
-    redis_url = os.getenv("TB2_REDIS_URL", "redis://localhost:6379/0")
+    redis_url = os.getenv("TB2_REDIS_URL", "redis://127.0.0.1:6381/0")
     consumer_start = os.getenv("TB2_CONSUMER_START_ID", "$")
     broker_name = os.getenv("TB2_BROKER_NAME", "zerodha")
 

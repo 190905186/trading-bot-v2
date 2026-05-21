@@ -27,9 +27,25 @@ class MetricDefinition:
 
 
 DEFAULT_METRIC_CATALOG: Dict[str, MetricDefinition] = {
+    "ticks_stored_total": MetricDefinition(
+        metric_id="ticks_stored_total",
+        title="Ticks Stored (SQLite, all brokers)",
+        source_stream="sqlite",
+        aggregation="count",
+        chart_type="single_stat",
+        window_seconds=0,
+    ),
+    "candles_stored_total": MetricDefinition(
+        metric_id="candles_stored_total",
+        title="Candles Stored (SQLite, all brokers)",
+        source_stream="sqlite",
+        aggregation="count",
+        chart_type="single_stat",
+        window_seconds=0,
+    ),
     "ticks_received_total": MetricDefinition(
         metric_id="ticks_received_total",
-        title="Ticks Received (Broker/Token)",
+        title="Ticks Received (last window, Redis stream)",
         source_stream="ticks.raw",
         aggregation="count",
         chart_type="table",
@@ -45,7 +61,7 @@ DEFAULT_METRIC_CATALOG: Dict[str, MetricDefinition] = {
     ),
     "candles_closed_total": MetricDefinition(
         metric_id="candles_closed_total",
-        title="Closed Candles (Broker/Token)",
+        title="Closed Candles (last window, Redis stream)",
         source_stream="candles.1m.closed",
         aggregation="count",
         chart_type="table",

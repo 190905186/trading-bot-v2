@@ -11,6 +11,10 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from trading_bot_v2.bootstrap.repo_dotenv import load_repo_dotenv  # noqa: E402
+
+load_repo_dotenv()
+
 from trading_bot_v2.bootstrap.app_container import AppContainer
 from trading_bot_v2.monitoring.metric_catalog import MetricCatalog
 from trading_bot_v2.monitoring.providers import StaticHealthProvider, StaticMetricProvider

@@ -17,6 +17,13 @@ class SimpleCandleMomentumStrategy(TradingStrategy):
     def strategy_id(self) -> str:
         return "simple_candle_momentum"
 
+    def dashboard_metadata(self) -> Dict[str, Any]:
+        return {
+            "strategy_id": self.strategy_id,
+            "strategy_kind": "simple_candle_momentum",
+            "threshold_percent": self._threshold_percent,
+        }
+
     def on_candle(self, candle_event: Mapping[str, Any]) -> Optional[Dict[str, Any]]:
         payload = candle_event.get("payload", candle_event)
         try:

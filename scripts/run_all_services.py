@@ -9,8 +9,10 @@ import sys
 import time
 from pathlib import Path
 
+from dotenv import load_dotenv
 
 ROOT = Path(__file__).resolve().parents[1]
+load_dotenv(ROOT / ".env")
 VENV_PYTHON = ROOT / ".venv" / "Scripts" / "python.exe"
 
 
@@ -32,6 +34,7 @@ def main() -> None:
     try:
         processes.append(("ticks", _start("ticks", "scripts/run_ticks_service.py")))
         processes.append(("candle", _start("candle", "scripts/run_candle_service.py")))
+        processes.append(("storage", _start("storage", "scripts/run_storage_service.py")))
         processes.append(("signal", _start("signal", "scripts/run_signal_service.py")))
         processes.append(("order", _start("order", "scripts/run_order_service.py")))
         processes.append(

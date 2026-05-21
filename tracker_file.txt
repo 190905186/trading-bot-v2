@@ -1,0 +1,32 @@
+ticks 
+zeordha -- working 
+finvasia -- partially working
+angelone -- working
+candles(historical candles) ( live 1m candles)
+zerodah -- working (384 tokens)
+finvasia -- working
+cangleone -- working
+candles ( generated from ticks)
+zeordha -- test
+finvasia -- test
+angelone -- test
+
+signal generation:
+
+what are the columns required?
+how to make columns what is the logic to derive them?
+how to decide on the signal based on the column values?
+
+MACD,RSI,BOLLINGER BANDS,CANDLESTICK PATTERS,VOLUME,SUPPORT RESISTANCE,DOW THEORY(TREND)
+
+1. open_price, high, low, tick_size and the code is present in async old angelone
+2. 
+
+
+redis and the sqllite db publishing and every thing is running in different file.
+
+action points:
+
+-- some tokens needs to be given priority
+-- test it for 60 tokens and see whether we get candles for every minute for each token with out any dealy.
+-- 

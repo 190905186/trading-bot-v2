@@ -25,6 +25,10 @@ class TradingStrategy(ABC):
     def configure(self, options: Mapping[str, Any]) -> None:
         """Optional runtime config hook."""
 
+    def dashboard_metadata(self) -> Dict[str, Any]:
+        """Static-ish parameters for dashboard heartbeats (merged under ``metadata``)."""
+        return {"strategy_id": self.strategy_id}
+
 
 class StrategyFactory(ABC):
     """Factory interface for building strategy plugins."""

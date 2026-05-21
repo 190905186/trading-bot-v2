@@ -36,9 +36,13 @@ class MinuteCandleAggregator:
     def process_tick_event(self, tick_event: Mapping[str, Any]) -> Optional[Dict[str, Any]]:
         payload = tick_event.get("payload", tick_event)
         broker = str(payload.get("broker", "unknown"))
-        token = str(payload.get("token", payload.get("instrument_id", "UNKNOWN")))
+        token = str(
+            payload.get("token")
+            or payload.get("exchange_token")
+            or payload.get("instrument_id", "UNKNOWN")
+        )
         price = float(payload.get("last_price", 0.0) or 0.0)
-        volume = int(payload.get("volume", 0) or 0)
+        volume = int(payload.get("volume_traded", payload.get("volume", 0)) or 0)
         ts = _parse_ts(payload.get("timestamp"))
         minute_start = ts.replace(second=0, microsecond=0)
         key = f"{broker}:{token}"

@@ -1,0 +1,25 @@
+# Redis (TB2_REDIS_URL from host): redis://127.0.0.1:6381/0
+#
+# Redis Insight (browser): http://127.0.0.1:5540
+# Add database in the UI: Host "redis", Port 6379, Database Alias e.g. tb2-local
+# (Use the service name "redis" — not localhost — so the Insight container reaches this stack.)
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: tb2-redis
+    ports:
+      - "6381:6379"
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: tb2-redisinsight
+    depends_on:
+      - redis
+    ports:
+      - "5540:5540"
+    volumes:
+      - redisinsight-data:/data
+
+volumes:
+  redisinsight-data:

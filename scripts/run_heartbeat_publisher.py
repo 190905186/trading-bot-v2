@@ -11,13 +11,17 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from trading_bot_v2.bootstrap.repo_dotenv import load_repo_dotenv  # noqa: E402
+
+load_repo_dotenv()
+
 from trading_bot_v2.infrastructure.messaging import RedisStreamPublisher
 from trading_bot_v2.monitoring.heartbeat import HeartbeatEmitter
 from trading_bot_v2.monitoring.system_providers import ProcessResourceHealthProvider
 
 
 def main() -> None:
-    redis_url = os.getenv("TB2_REDIS_URL", "redis://localhost:6379/0")
+    redis_url = os.getenv("TB2_REDIS_URL", "redis://127.0.0.1:6381/0")
     service_name = os.getenv("TB2_SERVICE_NAME", "unknown-service")
     interval = float(os.getenv("TB2_HEARTBEAT_INTERVAL_SECONDS", "2.0"))
 

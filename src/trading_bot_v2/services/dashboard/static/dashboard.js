@@ -34,6 +34,16 @@ function makeTable(headers, rows) {
   return `<table><thead><tr>${headHtml}</tr></thead><tbody>${rowHtml}</tbody></table>`;
 }
 
+function metadataDetailsCell(info) {
+  const m = info.metadata;
+  if (!m || typeof m !== "object" || Object.keys(m).length === 0) {
+    return "-";
+  }
+  const keys = Object.keys(m).length;
+  const json = JSON.stringify(m, null, 2);
+  return `<details class="meta-details"><summary>${escapeHtml(String(keys) + " fields")}</summary><pre class="meta-pre">${escapeHtml(json)}</pre></details>`;
+}
+
 function renderHealth(snapshot) {
   const health = snapshot?.health?.["heartbeat-monitor"]?.services || {};
   const rows = Object.entries(health).map(([serviceName, info]) => [
@@ -42,9 +52,10 @@ function renderHealth(snapshot) {
     info.age_seconds ?? "-",
     info.cpu_percent ?? "-",
     info.memory_mb ?? "-",
+    metadataDetailsCell(info),
   ]);
   servicesHealthEl.innerHTML = makeTable(
-    ["Service", "Status", "Age(s)", "CPU %", "Memory MB"],
+    ["Service", "Status", "Age(s)", "CPU %", "Memory MB", "Pipeline / config"],
     rows
   );
 }
@@ -52,8 +63,10 @@ function renderHealth(snapshot) {
 function renderSummary(snapshot) {
   const metrics = snapshot?.metrics || {};
   const summaryItems = [
-    { label: "Ticks (count)", value: metrics?.ticks_received_total?.value ?? "-" },
-    { label: "Candles (count)", value: metrics?.candles_closed_total?.value ?? "-" },
+    { label: "Ticks (SQLite total)", value: metrics?.ticks_stored_total?.value ?? "-" },
+    { label: "Candles (SQLite total)", value: metrics?.candles_stored_total?.value ?? "-" },
+    { label: "Ticks (Redis stream)", value: metrics?.ticks_received_total?.stream_length ?? metrics?.ticks_received_total?.value ?? "-" },
+    { label: "Candles (Redis stream)", value: metrics?.candles_closed_total?.stream_length ?? metrics?.candles_closed_total?.value ?? "-" },
     { label: "Signals (count)", value: metrics?.signals_generated_total?.value ?? "-" },
     { label: "Signal->Order Ratio", value: metrics?.signals_to_orders_ratio?.value ?? "-" },
     { label: "SL Modifications", value: metrics?.sl_modifications_total?.value ?? "-" },

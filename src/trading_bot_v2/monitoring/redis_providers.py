@@ -76,11 +76,29 @@ class RedisStreamMetricProvider(MetricProvider):
                 values.append(str(event_payload.get(field)))
         return "|".join(values)
 
+    def _stream_length(self, stream_name: str) -> int:
+        try:
+            return int(self._redis.xlen(stream_name))
+        except Exception:
+            return 0
+
     def _compute(self, metric_id: str, window_seconds: int) -> Dict[str, Any]:
         if metric_id == "ticks_received_total":
+            stream_len = self._stream_length("ticks.raw")
+            if window_seconds <= 0:
+                return {"value": stream_len, "stream_length": stream_len, "timestamp": _utc_iso_now()}
             rows = self._read_stream_payloads("ticks.raw", window_seconds)
             grouped = Counter(self._key(row, "broker", "token") for row in rows)
-            return {"value": len(rows), "breakdown": dict(grouped), "timestamp": _utc_iso_now()}
+            value = len(rows)
+            if value >= self._max_items:
+                value = stream_len
+            return {
+                "value": value,
+                "window_count": len(rows),
+                "stream_length": stream_len,
+                "breakdown": dict(grouped),
+                "timestamp": _utc_iso_now(),
+            }
 
         if metric_id == "tick_share_by_broker":
             rows = self._read_stream_payloads("ticks.raw", window_seconds)
@@ -90,9 +108,21 @@ class RedisStreamMetricProvider(MetricProvider):
             return {"value": share, "timestamp": _utc_iso_now()}
 
         if metric_id == "candles_closed_total":
+            stream_len = self._stream_length("candles.1m.closed")
+            if window_seconds <= 0:
+                return {"value": stream_len, "stream_length": stream_len, "timestamp": _utc_iso_now()}
             rows = self._read_stream_payloads("candles.1m.closed", window_seconds)
             grouped = Counter(self._key(row, "broker", "token") for row in rows)
-            return {"value": len(rows), "breakdown": dict(grouped), "timestamp": _utc_iso_now()}
+            value = len(rows)
+            if value >= self._max_items:
+                value = stream_len
+            return {
+                "value": value,
+                "window_count": len(rows),
+                "stream_length": stream_len,
+                "breakdown": dict(grouped),
+                "timestamp": _utc_iso_now(),
+            }
 
         if metric_id == "signals_generated_total":
             rows = self._read_stream_payloads("signals.generated", window_seconds)
@@ -217,7 +247,7 @@ class RedisHeartbeatHealthProvider(HealthProvider):
                 ts = now
             age_seconds = max(0.0, (now - ts).total_seconds())
             status = "up" if age_seconds <= self._stale_after_seconds else "stale"
-            latest_by_service[service_name] = {
+            entry: Dict[str, Any] = {
                 "service_name": service_name,
                 "status": status,
                 "age_seconds": round(age_seconds, 3),
@@ -225,6 +255,10 @@ class RedisHeartbeatHealthProvider(HealthProvider):
                 "memory_mb": _safe_float(payload.get("memory_mb")),
                 "last_heartbeat": ts.isoformat(),
             }
+            hb_meta = payload.get("metadata")
+            if isinstance(hb_meta, dict) and hb_meta:
+                entry["metadata"] = hb_meta
+            latest_by_service[service_name] = entry
 
         return {
             "service_name": "heartbeat-monitor",
