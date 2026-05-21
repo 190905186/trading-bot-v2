@@ -1,3 +1,4 @@
+# Python
 __pycache__/
 *.py[cod]
 *.pyo
@@ -7,8 +8,54 @@ __pycache__/
 .venv/
 venv/
 env/
-.env
 dist/
 build/
 *.egg-info/
+*.egg
+
+# Secrets / local config
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
 *.log
+
+# SQLite / local databases (never commit)
+*.db
+*.sqlite
+*.sqlite3
+*.db-wal
+*.db-shm
+data/
+
+# Runtime state & caches
+state.json
+state/
+*.pkl
+*.pickle
+*.parquet
+*.feather
+*.h5
+*.hdf5
+
+# Broker / token universe downloads (large generated files)
+token_universe/
+instruments.csv
+**/instruments.csv
+
+# Test / coverage artifacts
+htmlcov/
+.coverage
+.coverage.*
+.tox/
+.nox/
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
